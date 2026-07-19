@@ -1,0 +1,41 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: ${SUPABASE_DB_URL}
+    username: ${SUPABASE_DB_USER}
+    password: ${SUPABASE_DB_PASSWORD}
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      idle-timeout: 30000
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  cache:
+    type: caffeine
+    caffeine:
+      spec: maximumSize=500,expireAfterWrite=300s
+
+app:
+  supabase:
+    url: ${SUPABASE_URL:https://anoofcmhgkdclgeredla.supabase.co}
+    anon-key: ${SUPABASE_ANON_KEY:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFub29mY21oZ2tkY2xnZXJlZGxhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ0NjY5ODYsImV4cCI6MjEwMDA0Mjk4Nn0.IF_VHdw6oOFXE4p8Fts_Vd-HHuiCQWxOW9CuLHM9Q6w}
+    jwt-secret: ${SUPABASE_JWT_SECRET:your-jwt-secret}
+  gemini:
+    api-key: ${GEMINI_API_KEY:}
+    enabled: ${GEMINI_ENABLED:false}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+
+logging:
+  level:
+    com.fifa2026: DEBUG

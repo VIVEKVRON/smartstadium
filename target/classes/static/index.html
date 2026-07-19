@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="FIFA 2026 Smart Stadiums - Portal">
+    <title>FIFA 2026 Smart Stadiums</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M2 12h20"></path>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            </svg>
+            FIFA 2026 Smart Stadiums
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="text-center mb-4 mt-4">
+            <h1>Welcome to Smart Stadiums</h1>
+            <p>Select your access portal to continue.</p>
+        </div>
+
+        <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 800px; margin: 0 auto;">
+            
+            <div class="card text-center">
+                <h2>Staff Portal</h2>
+                <p>Access the Stadium Operations Dashboard to monitor real-time crowd density, capacities, and alerts.</p>
+                <div class="mt-4" id="staff-auth-section">
+                    <form id="staff-login-form" class="text-left" style="max-width: 250px; margin: 0 auto;">
+                        <div class="input-group">
+                            <label for="staff-email" class="input-label">Email</label>
+                            <input type="email" id="staff-email" class="input-field" required aria-required="true">
+                        </div>
+                        <div class="input-group">
+                            <label for="staff-password" class="input-label">Password</label>
+                            <input type="password" id="staff-password" class="input-field" required aria-required="true">
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Staff Login</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card text-center">
+                <h2>Fan Portal</h2>
+                <p>Access the Fan Assistance Chat for stadium information, directions, and support.</p>
+                <div class="mt-4" id="fan-auth-section">
+                    <button id="fan-access-btn" class="btn btn-secondary" style="width: 100%; max-width: 250px;">Continue as Fan</button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const staffForm = document.getElementById('staff-login-form');
+            const fanBtn = document.getElementById('fan-access-btn');
+
+            staffForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('staff-email').value;
+                const password = document.getElementById('staff-password').value;
+                await window.appAuth.login(email, password, 'dashboard.html');
+            });
+
+            fanBtn.addEventListener('click', async () => {
+                // For fans, we could use anonymous auth or simple redirect if auth not required
+                // Assuming simple redirect for fan portal access for now or anonymous sign in
+                await window.appAuth.loginAnonymously('chat.html');
+            });
+        });
+    </script>
+</body>
+</html>

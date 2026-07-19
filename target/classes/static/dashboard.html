@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Stadium Operations Dashboard">
+    <title>Stadium Dashboard - FIFA 2026</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M2 12h20"></path>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            </svg>
+            FIFA 2026 Operations
+        </div>
+        <div class="navbar-nav">
+            <select id="stadium-selector" class="input-field" style="width: auto;" aria-label="Select Stadium">
+                <option value="">Loading Stadiums...</option>
+            </select>
+            <span class="badge badge-staff">STAFF</span>
+            <button id="notification-btn" class="btn btn-secondary" aria-label="Notifications" style="padding: 8px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+            </button>
+            <button id="logout-btn" class="btn btn-secondary">Logout</button>
+        </div>
+    </nav>
+
+    <main class="container" style="padding-bottom: 80px;">
+        <div class="dashboard-layout">
+            <!-- Left: Heatmap Grid -->
+            <section class="card" aria-labelledby="heatmap-title">
+                <h2 id="heatmap-title">Stadium Heatmap</h2>
+                <div id="heatmap-container" class="heatmap-grid" aria-live="polite">
+                    <!-- Grid populated by JS -->
+                </div>
+            </section>
+
+            <!-- Right: Capacity & Alerts -->
+            <aside class="flex" style="flex-direction: column; gap: 1.5rem;">
+                <section class="card" aria-labelledby="capacity-title">
+                    <h2 id="capacity-title">Zone Capacity</h2>
+                    <div id="capacity-container" class="grid" style="grid-template-columns: repeat(2, 1fr); gap: 1rem;" aria-live="polite">
+                        <!-- Circular progress populated by JS -->
+                    </div>
+                </section>
+
+                <section class="card" aria-labelledby="alerts-title" style="flex: 1; display: flex; flex-direction: column; overflow: hidden;">
+                    <h2 id="alerts-title">Real-Time Alerts</h2>
+                    <div id="alerts-container" class="alerts-list" aria-live="assertive">
+                        <!-- Alerts populated by JS -->
+                    </div>
+                </section>
+            </aside>
+        </div>
+    </main>
+
+    <!-- Bottom Metrics Bar -->
+    <footer class="metrics-bar">
+        <div class="metric-item">
+            <span class="metric-label">Total Attendance</span>
+            <span id="metric-attendance" class="metric-value">--</span>
+        </div>
+        <div class="metric-item">
+            <span class="metric-label">Avg Density</span>
+            <span id="metric-density" class="metric-value">--%</span>
+        </div>
+        <div class="metric-item">
+            <span class="metric-label">Active Alerts</span>
+            <span id="metric-alerts" class="metric-value">--</span>
+        </div>
+        <div class="metric-item">
+            <span class="metric-label">Last Updated</span>
+            <span id="metric-time" class="metric-value">--:--:--</span>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

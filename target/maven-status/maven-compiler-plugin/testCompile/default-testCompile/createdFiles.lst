@@ -1,0 +1,6 @@
+com\fifa2026\smartstadium\domain\crowd\CrowdServiceTest.class
+com\fifa2026\smartstadium\SmartStadiumApplicationTest.class
+com\fifa2026\smartstadium\domain\stadium\StadiumServiceTest.class
+com\fifa2026\smartstadium\domain\assistant\AssistantServiceTest.class
+com\fifa2026\smartstadium\security\SecurityIntegrationTest.class
+com\fifa2026\smartstadium\domain\transit\TransitServiceTest.class

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Fan Assistance Chat">
+    <title>Fan Assistance - FIFA 2026</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M2 12h20"></path>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            </svg>
+            <span id="stadium-name-display">Smart Stadium</span>
+        </div>
+        <div class="navbar-nav">
+            <select id="language-selector" class="input-field" style="width: auto;" aria-label="Select Language">
+                <option value="EN">English</option>
+                <option value="ES">Español</option>
+                <option value="FR">Français</option>
+                <option value="AR">العربية</option>
+            </select>
+            <button id="exit-btn" class="btn btn-secondary">Exit</button>
+        </div>
+    </nav>
+
+    <main class="chat-layout">
+        <!-- Left Sidebar: Quick Links -->
+        <aside class="chat-sidebar card">
+            <h2>Quick Links</h2>
+            <nav style="display: flex; flex-direction: column; gap: 0.5rem;" aria-label="Quick Links">
+                <a href="#" class="btn btn-secondary" style="justify-content: flex-start;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mr-2"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg> Stadium Map</a>
+                <a href="#" class="btn btn-secondary" style="justify-content: flex-start;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mr-2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> Transit Info</a>
+                <a href="#" class="btn btn-secondary" style="justify-content: flex-start;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mr-2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg> Accessibility</a>
+                <a href="#" class="btn btn-secondary" style="justify-content: flex-start;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mr-2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Emergency Info</a>
+            </nav>
+        </aside>
+
+        <!-- Main Chat Area -->
+        <section class="chat-container">
+            <div id="chat-messages" class="chat-messages" aria-live="polite" aria-atomic="false">
+                <!-- Initial Welcome Message -->
+                <div class="chat-bubble chat-bubble-bot">
+                    <div>Welcome to the Fan Assistance portal! How can I help you today?</div>
+                    <div class="chat-timestamp">Now</div>
+                </div>
+            </div>
+            
+            <div class="chat-input-area">
+                <div class="chip-group" id="suggestion-chips" aria-label="Suggested Questions">
+                    <button class="chip">Where is my seat?</button>
+                    <button class="chip">Food near section 102</button>
+                    <button class="chip">Wait time for restrooms</button>
+                    <button class="chip">Transport options</button>
+                </div>
+                <div class="chat-input-row">
+                    <input type="text" id="chat-input" class="chat-input" placeholder="Type your message..." aria-label="Message text">
+                    <button id="send-btn" class="btn btn-primary" aria-label="Send Message">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                    </button>
+                    <button id="mic-btn" class="btn btn-secondary" aria-label="Use Microphone" style="padding: 8px;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/chat.js"></script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+# FIFA 2026 Smart Stadiums Platform - .dockerignore
+.git
+.gitignore
+*.md
+!README.md
+target/
+*.iml
+.idea/
+.vscode/
+.DS_Store
+node_modules/
+k8s/
+docker-compose.yml
+.env
+*.log

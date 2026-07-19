@@ -1,0 +1,179 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: smartstadium-config
+  namespace: fifa2026
+  labels:
+    app: smartstadium
+    version: "1.0.0"
+    part-of: fifa2026-platform
+data:
+  SPRING_PROFILES_ACTIVE: "production"
+  SERVER_PORT: "8080"
+  JAVA_OPTS: "-Xmx512m -Xms256m -XX:+UseG1GC -XX:+UseContainerSupport -XX:MaxGCPauseMillis=200"
+  SUPABASE_URL: "https://anoofcmhgkdclgeredla.supabase.co"
+  GEMINI_ENABLED: "false"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: smartstadium-secrets
+  namespace: fifa2026
+  labels:
+    app: smartstadium
+type: Opaque
+stringData:
+  SUPABASE_DB_URL: "jdbc:postgresql://db.anoofcmhgkdclgeredla.supabase.co:5432/postgres"
+  SUPABASE_DB_USER: "postgres"
+  SUPABASE_DB_PASSWORD: "CHANGE_ME"
+  SUPABASE_ANON_KEY: "CHANGE_ME"
+  SUPABASE_JWT_SECRET: "CHANGE_ME"
+  GEMINI_API_KEY: ""
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: smartstadium-api
+  namespace: fifa2026
+  labels:
+    app: smartstadium
+    version: "1.0.0"
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: smartstadium
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: smartstadium
+        version: "1.0.0"
+    spec:
+      serviceAccountName: smartstadium-sa
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+        - name: smartstadium
+          image: fifa2026/smartstadium:1.0.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+              name: http
+          envFrom:
+            - configMapRef:
+                name: smartstadium-config
+            - secretRef:
+                name: smartstadium-secrets
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          startupProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            failureThreshold: 30
+      terminationGracePeriodSeconds: 30
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: smartstadium-service
+  namespace: fifa2026
+  labels:
+    app: smartstadium
+spec:
+  type: ClusterIP
+  selector:
+    app: smartstadium
+  ports:
+    - port: 80
+      targetPort: 8080
+      protocol: TCP
+      name: http
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: smartstadium-hpa
+  namespace: fifa2026
+  labels:
+    app: smartstadium
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: smartstadium-api
+  minReplicas: 3
+  maxReplicas: 20
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 60
+      policies:
+        - type: Pods
+          value: 4
+          periodSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+        - type: Pods
+          value: 1
+          periodSeconds: 120
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: smartstadium-sa
+  namespace: fifa2026
+  labels:
+    app: smartstadium
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: fifa2026
+  labels:
+    name: fifa2026
+    environment: production

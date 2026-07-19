@@ -1,0 +1,50 @@
+version: '3.9'
+
+services:
+  smartstadium-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fifa2026-smartstadium
+    ports:
+      - "8080:8080"
+    environment:
+      # Supabase Database Connection
+      SUPABASE_DB_URL: jdbc:postgresql://db.anoofcmhgkdclgeredla.supabase.co:5432/postgres
+      SUPABASE_DB_USER: postgres
+      SUPABASE_DB_PASSWORD: ${SUPABASE_DB_PASSWORD}
+      
+      # Supabase API
+      SUPABASE_URL: https://anoofcmhgkdclgeredla.supabase.co
+      SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY}
+      SUPABASE_JWT_SECRET: ${SUPABASE_JWT_SECRET}
+      
+      # GenAI (Optional - falls back to mock if not set)
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_ENABLED: ${GEMINI_ENABLED:-false}
+      
+      # JVM
+      JAVA_OPTS: "-Xmx768m -Xms256m -XX:+UseG1GC -XX:+UseContainerSupport"
+      SPRING_PROFILES_ACTIVE: production
+    
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    
+    restart: unless-stopped
+    
+    deploy:
+      resources:
+        limits:
+          memory: 1024M
+          cpus: '2.0'
+        reservations:
+          memory: 512M
+          cpus: '0.5'
+
+networks:
+  default:
+    name: fifa2026-network
