@@ -13,6 +13,14 @@ A production-ready, secure web application for stadium navigation, crowd managem
 | **Caching** | Caffeine (Spring Cache) | Transit schedules (5min TTL) |
 | **Deployment** | Docker + Kubernetes | Production-ready containers |
 
+## 🔑 Testing Credentials
+
+Use the following credentials to bypass Supabase email verification during testing and access the **Staff Dashboard**:
+- **Email:** `staff@fifa2026.com`
+- **Password:** `Password123!`
+
+*(Note: The Fan Chat interface is accessible without authentication by clicking "Continue as Fan".)*
+
 ## 🚀 Quick Start
 
 ### Prerequisites
