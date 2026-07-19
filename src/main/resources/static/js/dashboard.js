@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             renderHeatmap(data.zones || []);
             renderCapacityGauges(data.zones || []);
-            renderAlerts(data.alerts || []);
+            renderAlerts([]); // Backend doesn't return full alert objects yet
             updateMetrics(data);
             
             updateTimestamp();
@@ -87,7 +87,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderHeatmap(zones) {
         heatmapContainer.innerHTML = '';
         zones.forEach(zone => {
-            const density = (zone.currentPeople / zone.capacity) * 100;
+            const density = zone.currentDensity || 0;
+            // Calculate approximate capacity backwards
+            const capacity = density > 0 ? Math.round(zone.peopleCount / (density / 100)) : 0;
+            
             let statusColor = 'var(--status-green)';
             if (density > 85) statusColor = 'var(--status-red)';
             else if (density > 70) statusColor = 'var(--status-orange)';
@@ -98,12 +101,12 @@ document.addEventListener('DOMContentLoaded', () => {
             card.style.borderTop = `4px solid ${statusColor}`;
             card.innerHTML = `
                 <div>
-                    <h3 style="margin-bottom: 4px;">${zone.name}</h3>
-                    <div style="font-size: 0.85rem; color: var(--on-surface-variant);">Capacity: ${zone.capacity}</div>
+                    <h3 style="margin-bottom: 4px;">${zone.zoneName || 'Unknown Zone'}</h3>
+                    <div style="font-size: 0.85rem; color: var(--on-surface-variant);">Capacity: ${capacity}</div>
                 </div>
                 <div class="mt-4">
                     <div style="font-size: 1.5rem; font-weight: 700; color: ${statusColor};">${Math.round(density)}%</div>
-                    <div style="font-size: 0.85rem;">${zone.currentPeople} people</div>
+                    <div style="font-size: 0.85rem;">${zone.peopleCount || 0} people</div>
                 </div>
             `;
             heatmapContainer.appendChild(card);
@@ -114,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
         capacityContainer.innerHTML = '';
         // Limit to 8 zones for UI layout
         zones.slice(0, 8).forEach(zone => {
-            const percentage = Math.round((zone.currentPeople / zone.capacity) * 100);
+            const percentage = Math.round(zone.currentDensity || 0);
             
             let strokeColor = 'var(--status-green)';
             if (percentage > 85) strokeColor = 'var(--status-red)';
@@ -133,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     </svg>
                     <div class="progress-value">${percentage}%</div>
                 </div>
-                <div style="font-size: 0.75rem; margin-top: 8px;">${zone.name}</div>
+                <div style="font-size: 0.75rem; margin-top: 8px;">${zone.zoneName || 'Unknown'}</div>
             `;
             capacityContainer.appendChild(gauge);
         });
@@ -170,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateMetrics(data) {
         metricAttendance.textContent = data.totalAttendance || 0;
         metricDensity.textContent = data.averageDensity ? `${Math.round(data.averageDensity)}%` : '0%';
-        metricAlerts.textContent = data.alerts ? data.alerts.length : 0;
+        metricAlerts.textContent = data.activeAlerts || 0;
     }
 
     function updateTimestamp() {
